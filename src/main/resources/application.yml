@@ -1,0 +1,60 @@
+server:
+  port: 8000
+  servlet:
+    context-path:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+
+#pagehelper:
+#  helper-dialect: mysql
+#  auto-dialect: true
+#  page-size-zero: false
+#  reasonable: true
+#  offset-as-page-num: false
+#  row-bounds-with-count: false
+#  auto-runtime-dialect: false
+#  close-conn: true
+#  default-count: true
+#  supportMethodsArguments: true
+  
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+      
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/bbgg?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
+    username: tud
+    password: 1234
+
+  servlet:
+    multipart: 
+      location: c:/Temp
+      max-file-size: 50MB
+      max-request-size: 50MB
+        
+
+      
+#  jpa:
+#    open-in-view: true
+#    hibernate:
+#      ddl-auto: update
+#      naming:
+#        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#      use-new-id-generator-mappings: false
+#      #show-sql: true
+#    properties:
+#      hibernate.format_sql: true
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
+elflab:
+  key: elflab1234 #노출되면 안되는 key => oauth 로그인으로 회원가입할 때 만들어지는 password 해당 key로 고정해서 통일
+  redirect-uri: http://localhost:8000

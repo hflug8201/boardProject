@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.elfLab.bbgg.mapper.UserMapper">
+
+   <insert id="join" parameterType="com.elfLab.bbgg.model.User">
+      INSERT INTO users(username, password, email) VALUES(#{username}, #{password}, #{email})
+   </insert>
+
+
+    <select id="findByUsername" resultType="com.elfLab.bbgg.model.User" parameterType= "String">
+    	SELECT * FROM users WHERE username=#{username}
+    </select> 
+
+
+	<select id="checkUsername" resultType="int" parameterType="String">
+		SELECT COUNT(*) FROM users WHERE username=#{username}
+	</select>
+
+
+</mapper>

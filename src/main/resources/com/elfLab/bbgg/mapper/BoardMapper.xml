@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.elfLab.bbgg.mapper.BoardMapper">
+	
+	<resultMap type="com.elfLab.bbgg.model.Board" id="BoardMap">
+		<result property="viewHits" column="view_hits" />
+		<result property="createdDate" column="created_date" />
+		<result property="userId" column="user_id" />
+	</resultMap>
+
+
+	
+	<select id="getBoardList" parameterType="com.elfLab.bbgg.model.Pagination" resultType="com.elfLab.bbgg.model.Board" resultMap="BoardMap">
+		SELECT * 
+		FROM board
+			<trim prefix="WHERE" prefixOverrides="AND|OR">
+				<if test="searchType=='title' and keyword != null and keyword != '' ">
+					AND TITLE like CONCAT('%', #{keyword}, '%')
+				</if>
+				
+				<if test="searchType=='content' and keyword != null and keyword != '' ">
+					AND CONTENT like CONCAT('%', #{keyword}, '%')
+				</if>
+				
+				<if test="searchType=='user_id' and keyword != null and keyword != '' ">
+					AND user_id like CONCAT('%', #{keyword}, '%')
+				</if>	
+			</trim>
+		
+		ORDER BY id 
+		DESC 
+		LIMIT #{startList}, #{listSize}
+	</select>
+
+
+	<select id="getTotalListCnt" resultType="int">
+		SELECT COUNT(*) as listCnt
+		FROM board
+			<trim prefix="WHERE" prefixOverrides="AND|OR">
+				<if test="keyword != null and keyword != '' ">
+				
+					<if test="searchType=='title'">
+						AND TITLE like CONCAT('%', #{keyword}, '%')
+					</if>
+			
+					<if test="searchType=='content'">
+						AND CONTENT like CONCAT('%', #{keyword}, '%')
+					</if>
+		
+					<if test="searchType=='user_id'">
+						AND user_id like CONCAT('%', #{keyword}, '%')
+					</if>
+   		  	 	</if>
+			</trim>
+	</select>
+	
+
+
+	<!-- 게시글 상세 조회 -->
+	<select id="getBoardById" resultType="com.elfLab.bbgg.model.Board" parameterType="int" resultMap="BoardMap">
+		SELECT * FROM board WHERE id=#{board.id}
+	</select>
+
+	<!-- 게시글 조회 수 증가 -->
+	<update id="increaseHit" parameterType="int">
+		UPDATE board SET view_hits = view_hits +1 WHERE id=#{board.id}
+	</update>
+	
+	<!-- 게시글 작성 -->
+	<insert id="createBoard" parameterType="com.elfLab.bbgg.model.Board" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO board(title, content, view_hits, created_date, user_id) VALUES(#{title}, #{content}, #{viewHits}, NOW(), #{userId})
+	</insert>
+	
+	<!-- 게시글 수정 -->
+	<update id="updateBoard" parameterType="com.elfLab.bbgg.model.Board">
+		UPDATE board SET title=#{title}, content=#{content} WHERE id=#{id} AND user_id=#{userId}
+	</update>
+	
+	<!-- 게시글 삭제 -->
+	<delete id="deleteBoard" parameterType="com.elfLab.bbgg.model.Board">
+		DELETE FROM board WHERE id=#{id} AND user_id=#{userId}
+	</delete>
+	
+</mapper>
